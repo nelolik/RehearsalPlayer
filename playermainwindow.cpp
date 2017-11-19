@@ -66,8 +66,8 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
 
     player1 = new SoundPlayer(this);
     player2 = new SoundPlayer(this);
-    playlistContainer1 = new QList<QStringList>;
-    playlistContainer2 = new QList<QStringList>;
+    playlistContainer1 = new QList<MediaItem>;
+    playlistContainer2 = new QList<MediaItem>;
     playlistModel1 = new PlaylistModel(playlistContainer1, this);
     playlistModel2 = new PlaylistModel(playlistContainer2, this);
     ui->playlist1_View->setModel(playlistModel1);
@@ -211,6 +211,11 @@ void PlayerMainWindow::onPositionChangged2(int time)
     ui->trackPosition2_Slider->setValue(time);
 }
 
+//void PlayerMainWindow::onPlaybackStoped1()
+//{
+
+//}
+
 void PlayerMainWindow::onSliderMoved1(int time)
 {
     player1->setNewPosition(time);
@@ -287,7 +292,7 @@ void PlayerMainWindow::on_playSelected1_Button_clicked()
 {
     QModelIndexList selectedTracks = filesSelectionModel1->selectedRows(0);
     QModelIndex index;
-    QList<QStringList> validFiles;
+    QList<MediaItem> validFiles;
     playlistModel1->clearContainer();
     foreach (index, selectedTracks) {
         QFileInfo fileInfo = model1->fileInfo(index);
@@ -296,14 +301,14 @@ void PlayerMainWindow::on_playSelected1_Button_clicked()
         QString suffix = fileInfo.suffix();
         if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
         {
-            validFiles.append(QStringList() << fileName << filePath);
+            validFiles.append(MediaItem(fileName, filePath));
         }
     }
     playlistModel1->appendItems(validFiles);
     emit playListDataChanged1();
     if(playlistContainer1->size() > 0)
     {
-        player1->setFileName(playlistContainer1->at(0).at(1));
+        player1->setFileName(playlistContainer1->at(0).filePath);
         play1clicked();
     }
 
@@ -313,7 +318,7 @@ void PlayerMainWindow::on_playSelected2_Button_clicked()
 {
     QModelIndexList selectedTracks = filesSelectionModel2->selectedRows(0);
     QModelIndex index;
-    QList<QStringList> validFiles;
+    QList<MediaItem> validFiles;
     playlistModel2->clearContainer();
     foreach (index, selectedTracks) {
         QFileInfo fileInfo = model2->fileInfo(index);
@@ -322,14 +327,14 @@ void PlayerMainWindow::on_playSelected2_Button_clicked()
         QString suffix = fileInfo.suffix();
         if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
         {
-            validFiles.append(QStringList() << fileName << filePath);
+            validFiles.append(MediaItem(fileName, filePath));
         }
     }
     playlistModel2->appendItems(validFiles);
     emit playListDataChanged2();
     if(playlistContainer2->size() > 0)
     {
-        player2->setFileName(playlistContainer2->at(0).at(1));
+        player2->setFileName(playlistContainer2->at(0).filePath);
         play2clicked();
     }
 }
@@ -352,7 +357,7 @@ void PlayerMainWindow::on_addToPlaylist1_Button_clicked()
 {
     QModelIndexList selectedTracks = filesSelectionModel1->selectedRows(0);
     QModelIndex index;
-    QList<QStringList> validFiles;
+    QList<MediaItem> validFiles;
     foreach (index, selectedTracks) {
         QFileInfo fileInfo = model1->fileInfo(index);
         QString fileName = fileInfo.fileName();
@@ -360,7 +365,7 @@ void PlayerMainWindow::on_addToPlaylist1_Button_clicked()
         QString suffix = fileInfo.suffix();
         if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
         {
-            validFiles.append(QStringList() << fileName << filePath);
+            validFiles.append(MediaItem(fileName, filePath));
         }
     }
     playlistModel1->appendItems(validFiles);
@@ -370,7 +375,7 @@ void PlayerMainWindow::on_addToPlaylist2_Button_clicked()
 {
     QModelIndexList selectedTracks = filesSelectionModel2->selectedRows(0);
     QModelIndex index;
-    QList<QStringList> validFiles;
+    QList<MediaItem> validFiles;
     foreach (index, selectedTracks) {
         QFileInfo fileInfo = model2->fileInfo(index);
         QString fileName = fileInfo.fileName();
@@ -378,7 +383,7 @@ void PlayerMainWindow::on_addToPlaylist2_Button_clicked()
         QString suffix = fileInfo.suffix();
         if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
         {
-            validFiles.append(QStringList() << fileName << filePath);
+            validFiles.append(MediaItem(fileName, filePath));
         }
     }
     playlistModel2->appendItems(validFiles);

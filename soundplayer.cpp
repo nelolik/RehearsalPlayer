@@ -19,6 +19,7 @@ SoundPlayer::SoundPlayer(QObject *parent) : QObject(parent),
     connect(m_mpl, SIGNAL(positionChanged(qint64)), this, SLOT(changedPosition(qint64)));
     connect(m_mpl, SIGNAL(durationChanged(qint64)), this, SLOT(changedDuration(qint64)));
     connect(m_mpl, SIGNAL(audioAvailableChanged(bool)), this, SLOT(onAudioAvailableChanged(bool)));
+    connect(m_mpl, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(onStateChaged(QMediaPlayer::State)));
 }
 
 void SoundPlayer::setFileName(QString filename)
@@ -82,5 +83,13 @@ void SoundPlayer::onAudioAvailableChanged(bool available)
     {
         emit playStart();
         playAfterAudioReady = false;
+    }
+}
+
+void SoundPlayer::onStateChaged(QMediaPlayer::State state)
+{
+    if(state == QMediaPlayer::StoppedState)
+    {
+        emit playbackStoped();
     }
 }

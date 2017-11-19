@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "soundplayer.h"
 #include "playlistmodel.h"
+#include "mediaitem.h"
 
 namespace Ui {
 class PlayerMainWindow;
@@ -24,12 +25,12 @@ private:
     SoundPlayer *player1;
     SoundPlayer *player2;
 
-    bool player1_isPlaying;
-    bool player2_isPlaying;
+    bool player1_isPlaying, player2_isPlaying;
+    bool goToNextTrack1, goToNextTrack2;
     QFileSystemModel *model1;
     QFileSystemModel *model2;
     QItemSelectionModel *filesSelectionModel1, *filesSelectionModel2;
-    QList<QStringList> *playlistContainer1, *playlistContainer2;
+    QList<MediaItem> *playlistContainer1, *playlistContainer2;
     QStringList *soundExtentions;
     QMediaPlaylist *mediaPlaylist1, *mediaPlaylist2;
     PlaylistModel *playlistModel1, *playlistModel2;
@@ -61,6 +62,8 @@ private slots:
     void onDurationChanged2(int);
     void onPositionChangged1(int);
     void onPositionChangged2(int);
+//    void onPlaybackStoped1();
+//    void onPlaybackStoped2();
     void onSliderMoved1(int);
     void onSliderMoved2(int);
     void onSliderClicked1(int);

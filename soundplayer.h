@@ -2,8 +2,8 @@
 #define SOUNDPLAYER_H
 
 #include <QObject>
+#include <QMediaPlayer>
 
-class QMediaPlayer;
 class QMediaPlaylist;
 
 class SoundPlayer : public QObject
@@ -34,11 +34,13 @@ signals:
     void setLeftTime(int);
     void setDuration(int);
     void setPlaylist(QMediaPlaylist*);
+    void playbackStoped();
 
 private slots:
     void changedPosition(qint64);
     void changedDuration(qint64);
     void onAudioAvailableChanged(bool available);
+    void onStateChaged(QMediaPlayer::State);
 
 public slots:
 };

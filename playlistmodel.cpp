@@ -5,9 +5,10 @@
 #include <QModelIndex>
 #include <QItemSelectionModel>
 #include <QLinkedList>
+#include "mediaitem.h"
 
 
-PlaylistModel::PlaylistModel(QList<QStringList> *playlist, QObject * parent):
+PlaylistModel::PlaylistModel(QList<MediaItem> *playlist, QObject * parent):
     QAbstractListModel(parent)
 {
     m_container = playlist;
@@ -22,7 +23,7 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
     if((role == Qt::DisplayRole) && index.isValid())
     {
-        return m_container->at(index.row()).at(0);
+        return m_container->at(index.row()).fileName;
     }
 
     return QVariant();
@@ -67,7 +68,7 @@ bool PlaylistModel::insertRows(int row, int count, const QModelIndex &parent)
     {
         for(int i = 0; i < count; i++)
         {
-            m_container->insert(row + i, QStringList(QString().append("A").append("A")));
+            m_container->insert(row + i, MediaItem());
         }
         return true;
     }
@@ -101,7 +102,7 @@ void PlaylistModel::clearContainer()
     endRemoveRows();
 }
 
-void PlaylistModel::appendItems(QList<QStringList> &items)
+void PlaylistModel::appendItems(QList<MediaItem> &items)
 {
     if(items.size() == 0)
     {

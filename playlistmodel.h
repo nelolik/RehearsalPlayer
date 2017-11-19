@@ -9,11 +9,12 @@
 class QVariant;
 class QStringList;
 class QItemSelectionModel;
+class MediaItem;
 
 class PlaylistModel : public QAbstractListModel
 {
 public:
-    PlaylistModel(QList<QStringList> *playlist, QObject * parent = 0);
+    PlaylistModel(QList<MediaItem> *playlist, QObject * parent = 0);
 
     // Basic required information
     int rowCount(const QModelIndex & parent = QModelIndex()) const override;
@@ -25,14 +26,14 @@ public:
 
     //Not overloaded functions
     void clearContainer();
-    void appendItems(QList<QStringList>&);
+    void appendItems(QList<MediaItem>&);
 
 public slots:
     void onDelButton(QItemSelectionModel *selectionModel);
 
 
 private:
-    QList<QStringList> *m_container;
+    QList<MediaItem> *m_container;
 };
 
 #endif // PLAYLISTMODEL_H

@@ -29,13 +29,15 @@ SOURCES += \
         playermainwindow.cpp \
     soundplayer.cpp \
     playlistmodel.cpp \
-    customlistview.cpp
+    customlistview.cpp \
+    mediaitem.cpp
 
 HEADERS += \
         playermainwindow.h \
     soundplayer.h \
     playlistmodel.h \
-    customlistview.h
+    customlistview.h \
+    mediaitem.h
 
 FORMS += \
         playermainwindow.ui
