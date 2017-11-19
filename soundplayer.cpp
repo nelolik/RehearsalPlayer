@@ -1,7 +1,9 @@
 #include "soundplayer.h"
 #include <QMediaPlayer>
 
-SoundPlayer::SoundPlayer(QObject *parent) : QObject(parent)
+SoundPlayer::SoundPlayer(QObject *parent) : QObject(parent),
+
+    playAfterAudioReady(false)
 {
     total_time = 0;
     elepsed_time = 0;
@@ -10,11 +12,13 @@ SoundPlayer::SoundPlayer(QObject *parent) : QObject(parent)
     m_mpl = new QMediaPlayer();
     m_mpl->setVolume(80);
 
-    connect(this, SIGNAL(playStart()), m_mpl, SLOT(play()));
+    connect(this, SIGNAL(playStart()), m_mpl, SLOT(play()), Qt::QueuedConnection);
     connect(this, SIGNAL(playStop()), m_mpl, SLOT(stop()));
     connect(this, SIGNAL(pause()), m_mpl, SLOT(pause()));
+    connect(this, SIGNAL(setPlaylist(QMediaPlaylist*)), m_mpl, SLOT(setPlaylist(QMediaPlaylist*)));
     connect(m_mpl, SIGNAL(positionChanged(qint64)), this, SLOT(changedPosition(qint64)));
     connect(m_mpl, SIGNAL(durationChanged(qint64)), this, SLOT(changedDuration(qint64)));
+    connect(m_mpl, SIGNAL(audioAvailableChanged(bool)), this, SLOT(onAudioAvailableChanged(bool)));
 }
 
 void SoundPlayer::setFileName(QString filename)
@@ -32,6 +36,10 @@ void SoundPlayer::play()
     if(m_mpl->isAudioAvailable())
     {
         emit playStart();
+    }
+    else
+    {
+        playAfterAudioReady = true;
     }
 }
 
@@ -66,4 +74,13 @@ void SoundPlayer::setNewPosition(int time)
         time = total_time;
     }
     m_mpl->setPosition(time * 1000);
+}
+
+void SoundPlayer::onAudioAvailableChanged(bool available)
+{
+    if(available && playAfterAudioReady)
+    {
+        emit playStart();
+        playAfterAudioReady = false;
+    }
 }

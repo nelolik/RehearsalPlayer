@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         playermainwindow.cpp \
     soundplayer.cpp \
-    tablesmanagment.cpp
+    playlistmodel.cpp \
+    customlistview.cpp
 
 HEADERS += \
         playermainwindow.h \
     soundplayer.h \
-    tablesmanagment.h
+    playlistmodel.h \
+    customlistview.h
 
 FORMS += \
         playermainwindow.ui

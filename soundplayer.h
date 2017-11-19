@@ -4,6 +4,7 @@
 #include <QObject>
 
 class QMediaPlayer;
+class QMediaPlaylist;
 
 class SoundPlayer : public QObject
 {
@@ -15,6 +16,8 @@ protected:
     int total_time;
     int elepsed_time;
     int left_time;
+    bool playAfterAudioReady;
+
 
 public:
     explicit SoundPlayer(QObject *parent = nullptr);
@@ -30,10 +33,12 @@ signals:
     void setPosition(int);
     void setLeftTime(int);
     void setDuration(int);
+    void setPlaylist(QMediaPlaylist*);
 
 private slots:
     void changedPosition(qint64);
     void changedDuration(qint64);
+    void onAudioAvailableChanged(bool available);
 
 public slots:
 };

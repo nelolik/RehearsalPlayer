@@ -1,11 +1,16 @@
 #include "playermainwindow.h"
 #include "ui_playermainwindow.h"
+#include "customlistview.h"
 #include <QFileDialog>
 #include <QSlider>
 #include <QFileSystemModel>
 #include <QTreeWidget>
 #include <QTreeView>
 #include <QItemSelectionModel>
+#include <QDebug>
+#include <QList>
+#include <QMediaPlaylist>
+#include <QModelIndex>
 
 PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,6 +32,8 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     ui->folders2_View->setModel(model2);
     ui->folders1_View->setSelectionModel(filesSelectionModel1);
     ui->folders2_View->setSelectionModel(filesSelectionModel2);
+    ui->folders1_View->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->folders2_View->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->folders1_View->setRootIndex(rootPath1);
     ui->folders2_View->setRootIndex(rootPath2);
     ui->folders1_View->hideColumn(1);
@@ -35,8 +42,7 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     ui->folders2_View->hideColumn(1);
     ui->folders2_View->hideColumn(2);
     ui->folders2_View->hideColumn(3);
-    ui->folders1_View->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->folders2_View->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
 
     ui->back1Button->setIcon(style()->standardIcon(QStyle::SP_MediaSeekBackward));
     ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -60,6 +66,18 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
 
     player1 = new SoundPlayer(this);
     player2 = new SoundPlayer(this);
+    playlistContainer1 = new QList<QStringList>;
+    playlistContainer2 = new QList<QStringList>;
+    playlistModel1 = new PlaylistModel(playlistContainer1, this);
+    playlistModel2 = new PlaylistModel(playlistContainer2, this);
+    ui->playlist1_View->setModel(playlistModel1);
+    ui->playlist2_View->setModel(playlistModel2);
+
+    soundExtentions = new QStringList;
+    *soundExtentions << "wav" << "mp3" << "wma" << "aiff" << "flac";
+
+    mediaPlaylist1 = new QMediaPlaylist;
+    mediaPlaylist2 = new QMediaPlaylist;
 
     connect(ui->play1Button, SIGNAL(clicked(bool)), this, SLOT(play1clicked()));
     connect(ui->play2Button, SIGNAL(clicked(bool)), this, SLOT(play2clicked()));
@@ -75,6 +93,10 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     connect(ui->back2Button, SIGNAL(clicked(bool)), this, SLOT(onBackButoonClicked2()));
     connect(ui->forward1Button, SIGNAL(clicked(bool)), this, SLOT(onForwardButtonClicked1()));
     connect(ui->forward2Button, SIGNAL(clicked(bool)), this, SLOT(onForwardButtonClicked2()));
+    connect(this, SIGNAL(repaintRect(QRect)), ui->playlist1_View, SLOT(repaint(const QRect&)));
+    connect(this, SIGNAL(playListDataChanged2()), ui->playlist2_View, SLOT(update()));
+    connect(ui->playlist1_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist1()));
+    connect(ui->playlist2_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist2()));
 
     connect(player1, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged1(int)));
     connect(player2, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged2(int)));
@@ -89,6 +111,9 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
 PlayerMainWindow::~PlayerMainWindow()
 {
     delete ui;
+    delete playlistContainer1;
+    delete playlistContainer2;
+    delete soundExtentions;
 }
 
 
@@ -116,11 +141,13 @@ void PlayerMainWindow::play1clicked()
     {
         player1->play();
         player1_isPlaying = true;
+        ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
     else
     {
         player1->pause();
         player1_isPlaying = false;
+        ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
 }
 
@@ -130,11 +157,13 @@ void PlayerMainWindow::play2clicked()
     {
         player2->play();
         player2_isPlaying = true;
+        ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
     else
     {
         player2->pause();
         player2_isPlaying = false;
+        ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
 }
 
@@ -256,5 +285,101 @@ void PlayerMainWindow::onForwardButtonClicked2()
 
 void PlayerMainWindow::on_playSelected1_Button_clicked()
 {
+    QModelIndexList selectedTracks = filesSelectionModel1->selectedRows(0);
+    QModelIndex index;
+    QList<QStringList> validFiles;
+    playlistModel1->clearContainer();
+    foreach (index, selectedTracks) {
+        QFileInfo fileInfo = model1->fileInfo(index);
+        QString fileName = fileInfo.fileName();
+        QString filePath = fileInfo.filePath();
+        QString suffix = fileInfo.suffix();
+        if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
+        {
+            validFiles.append(QStringList() << fileName << filePath);
+        }
+    }
+    playlistModel1->appendItems(validFiles);
+    emit playListDataChanged1();
+    if(playlistContainer1->size() > 0)
+    {
+        player1->setFileName(playlistContainer1->at(0).at(1));
+        play1clicked();
+    }
 
+}
+
+void PlayerMainWindow::on_playSelected2_Button_clicked()
+{
+    QModelIndexList selectedTracks = filesSelectionModel2->selectedRows(0);
+    QModelIndex index;
+    QList<QStringList> validFiles;
+    playlistModel2->clearContainer();
+    foreach (index, selectedTracks) {
+        QFileInfo fileInfo = model2->fileInfo(index);
+        QString fileName = fileInfo.fileName();
+        QString filePath = fileInfo.filePath();
+        QString suffix = fileInfo.suffix();
+        if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
+        {
+            validFiles.append(QStringList() << fileName << filePath);
+        }
+    }
+    playlistModel2->appendItems(validFiles);
+    emit playListDataChanged2();
+    if(playlistContainer2->size() > 0)
+    {
+        player2->setFileName(playlistContainer2->at(0).at(1));
+        play2clicked();
+    }
+}
+
+void PlayerMainWindow::deleteInPlaylist1()
+{
+    QItemSelectionModel *selection = ui->playlist1_View->selectionModel();
+    playlistModel1->onDelButton(selection);
+    emit playListDataChanged1();
+}
+
+void PlayerMainWindow::deleteInPlaylist2()
+{
+    QItemSelectionModel *selection = ui->playlist2_View->selectionModel();
+    playlistModel2->onDelButton(selection);
+    emit playListDataChanged2();
+}
+
+void PlayerMainWindow::on_addToPlaylist1_Button_clicked()
+{
+    QModelIndexList selectedTracks = filesSelectionModel1->selectedRows(0);
+    QModelIndex index;
+    QList<QStringList> validFiles;
+    foreach (index, selectedTracks) {
+        QFileInfo fileInfo = model1->fileInfo(index);
+        QString fileName = fileInfo.fileName();
+        QString filePath = fileInfo.filePath();
+        QString suffix = fileInfo.suffix();
+        if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
+        {
+            validFiles.append(QStringList() << fileName << filePath);
+        }
+    }
+    playlistModel1->appendItems(validFiles);
+}
+
+void PlayerMainWindow::on_addToPlaylist2_Button_clicked()
+{
+    QModelIndexList selectedTracks = filesSelectionModel2->selectedRows(0);
+    QModelIndex index;
+    QList<QStringList> validFiles;
+    foreach (index, selectedTracks) {
+        QFileInfo fileInfo = model2->fileInfo(index);
+        QString fileName = fileInfo.fileName();
+        QString filePath = fileInfo.filePath();
+        QString suffix = fileInfo.suffix();
+        if(soundExtentions->contains(suffix, Qt::CaseInsensitive))
+        {
+            validFiles.append(QStringList() << fileName << filePath);
+        }
+    }
+    playlistModel2->appendItems(validFiles);
 }
