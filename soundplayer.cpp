@@ -90,6 +90,6 @@ void SoundPlayer::onStateChaged(QMediaPlayer::State state)
 {
     if(state == QMediaPlayer::StoppedState)
     {
-        emit playbackStoped();
+        emit playbackStoped(state);
     }
 }

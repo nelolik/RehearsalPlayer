@@ -16,7 +16,9 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PlayerMainWindow),
     player1_isPlaying(false),
-    player2_isPlaying(false)
+    player2_isPlaying(false),
+    goToNextTrack1(true),
+    goToNextTrack2(true)
 {
     ui->setupUi(this);
 
@@ -79,6 +81,22 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     mediaPlaylist1 = new QMediaPlaylist;
     mediaPlaylist2 = new QMediaPlaylist;
 
+
+    createConnections();
+
+
+}
+
+PlayerMainWindow::~PlayerMainWindow()
+{
+    delete ui;
+    delete playlistContainer1;
+    delete playlistContainer2;
+    delete soundExtentions;
+}
+
+void PlayerMainWindow::createConnections()
+{
     connect(ui->play1Button, SIGNAL(clicked(bool)), this, SLOT(play1clicked()));
     connect(ui->play2Button, SIGNAL(clicked(bool)), this, SLOT(play2clicked()));
     connect(ui->stop1Button, SIGNAL(clicked(bool)), this, SLOT(stop1clicked()));
@@ -104,18 +122,10 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     connect(player2, SIGNAL(setPosition(int)), this, SLOT(onPositionChangged2(int)));
     connect(player1, SIGNAL(setLeftTime(int)), ui->left1lcdNumber, SLOT(display(int)));
     connect(player2, SIGNAL(setLeftTime(int)), ui->left2lcdNumber, SLOT(display(int)));
-
+    connect(player1, SIGNAL(playbackStoped(QMediaPlayer::State)), this, SLOT(onPlaybackStoped1(QMediaPlayer::State)));
+    connect(player2, SIGNAL(playbackStoped(QMediaPlayer::State)), this, SLOT(onPlaybackStoped2(QMediaPlayer::State)));
 
 }
-
-PlayerMainWindow::~PlayerMainWindow()
-{
-    delete ui;
-    delete playlistContainer1;
-    delete playlistContainer2;
-    delete soundExtentions;
-}
-
 
 void PlayerMainWindow::openFile1()
 {
@@ -171,12 +181,28 @@ void PlayerMainWindow::stop1clicked()
 {
     player1->stop();
     player1_isPlaying = false;
+    foreach (MediaItem item, *playlistContainer1) {
+        if(item.isPlaying)
+        {
+            item.isPlaying = false;
+        }
+    }
+    ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    stopPressed1 = true;
 }
 
 void PlayerMainWindow::stop2clicked()
 {
     player2->stop();
     player2_isPlaying = false;
+    foreach (MediaItem item, *playlistContainer2) {
+        if(item.isPlaying)
+        {
+            item.isPlaying = false;
+        }
+    }
+    ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    stopPressed2 = true;
 }
 
 void PlayerMainWindow::onDurationChanged1(int time)
@@ -309,7 +335,10 @@ void PlayerMainWindow::on_playSelected1_Button_clicked()
     if(playlistContainer1->size() > 0)
     {
         player1->setFileName(playlistContainer1->at(0).filePath);
-        play1clicked();
+        (*playlistContainer1)[0].isPlaying = true;
+        player1->play();
+        player1_isPlaying = true;
+        ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
 
 }
@@ -335,7 +364,10 @@ void PlayerMainWindow::on_playSelected2_Button_clicked()
     if(playlistContainer2->size() > 0)
     {
         player2->setFileName(playlistContainer2->at(0).filePath);
-        play2clicked();
+        (*playlistContainer2)[0].isPlaying = true;
+        player2->play();
+        player2_isPlaying = true;
+        ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
 }
 
@@ -387,4 +419,57 @@ void PlayerMainWindow::on_addToPlaylist2_Button_clicked()
         }
     }
     playlistModel2->appendItems(validFiles);
+}
+
+int PlayerMainWindow::playingTrack(QList<MediaItem> *container)
+{
+    int i = 0;
+    for(; i < container->size(); i++)
+    {
+        if(container->at(i).isPlaying)
+        {
+            break;
+        }
+    }
+    return i;
+}
+
+void PlayerMainWindow::playNextTrack(QList<MediaItem> *playlist, SoundPlayer *player)
+{
+    int currentTarack = playingTrack(playlist);
+    if(currentTarack < playlist->size())
+    {
+        (*playlist)[currentTarack].isPlaying = false;
+        ++currentTarack;
+        if(currentTarack < playlist->size())
+        {
+            player->setFileName(playlist->at(currentTarack).filePath);
+            (*playlist)[currentTarack].isPlaying = true;
+            player->play();
+
+
+        }
+    }
+}
+
+void PlayerMainWindow::onPlaybackStoped1(QMediaPlayer::State state)
+{
+    if(goToNextTrack1 && (state == QMediaPlayer::StoppedState) && !stopPressed1)
+    {
+        playNextTrack(playlistContainer1, player1);
+        player1_isPlaying = true;
+        ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    }
+    stopPressed1 = false;
+}
+
+void PlayerMainWindow::onPlaybackStoped2(QMediaPlayer::State state)
+{
+    if(goToNextTrack2 && (state == QMediaPlayer::StoppedState) && !stopPressed2)
+    {
+        playNextTrack(playlistContainer2, player2);
+        player2_isPlaying = true;
+        ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    }
+    stopPressed2 = false;
 }

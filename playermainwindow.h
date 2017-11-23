@@ -21,12 +21,19 @@ class PlayerMainWindow : public QMainWindow
 {
     Q_OBJECT
 
+public:
+    explicit PlayerMainWindow(QWidget *parent = 0);
+    ~PlayerMainWindow();
+
 private:
+    Ui::PlayerMainWindow *ui;
+
     SoundPlayer *player1;
     SoundPlayer *player2;
 
     bool player1_isPlaying, player2_isPlaying;
     bool goToNextTrack1, goToNextTrack2;
+    bool stopPressed1, stopPressed2;
     QFileSystemModel *model1;
     QFileSystemModel *model2;
     QItemSelectionModel *filesSelectionModel1, *filesSelectionModel2;
@@ -35,12 +42,9 @@ private:
     QMediaPlaylist *mediaPlaylist1, *mediaPlaylist2;
     PlaylistModel *playlistModel1, *playlistModel2;
 
-public:
-    explicit PlayerMainWindow(QWidget *parent = 0);
-    ~PlayerMainWindow();
-
-private:
-    Ui::PlayerMainWindow *ui;
+    void createConnections();
+    int playingTrack(QList<MediaItem>*);
+    void playNextTrack(QList<MediaItem>* playlist, SoundPlayer *player);
 
 signals:
     void playListDataChanged1();
@@ -62,8 +66,8 @@ private slots:
     void onDurationChanged2(int);
     void onPositionChangged1(int);
     void onPositionChangged2(int);
-//    void onPlaybackStoped1();
-//    void onPlaybackStoped2();
+    void onPlaybackStoped1(QMediaPlayer::State);
+    void onPlaybackStoped2(QMediaPlayer::State);
     void onSliderMoved1(int);
     void onSliderMoved2(int);
     void onSliderClicked1(int);

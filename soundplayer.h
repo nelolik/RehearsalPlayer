@@ -34,7 +34,7 @@ signals:
     void setLeftTime(int);
     void setDuration(int);
     void setPlaylist(QMediaPlaylist*);
-    void playbackStoped();
+    void playbackStoped(QMediaPlayer::State);
 
 private slots:
     void changedPosition(qint64);
