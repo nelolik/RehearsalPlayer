@@ -33,7 +33,7 @@ private:
 
     bool player1_isPlaying, player2_isPlaying;
     bool goToNextTrack1, goToNextTrack2;
-    bool stopPressed1, stopPressed2;
+    bool stopButtonClicked, forwardButtonClicked, backButtonClicked;
     QFileSystemModel *model1;
     QFileSystemModel *model2;
     QItemSelectionModel *filesSelectionModel1, *filesSelectionModel2;
@@ -44,18 +44,15 @@ private:
 
     void createConnections();
     int playingTrack(QList<MediaItem>*);
-    void playNextTrack(QList<MediaItem>* playlist, SoundPlayer *player);
+    int selectNextTrack(QList<MediaItem>* playlist, SoundPlayer *player);
+    int selectPrevTrack(QList<MediaItem>* playlist, SoundPlayer *player);
 
 signals:
-    void playListDataChanged1();
-    void playListDataChanged2();
-    void repaintRect(const QRect&);
     void setMediaPlaylist1(QMediaPlaylist*);
     void setMediaPlaylist2(QMediaPlaylist*);
 
 public slots:
-    void openFile1();
-    void openFile2();
+
 
 private slots:
     void play1clicked();
@@ -78,10 +75,12 @@ private slots:
     void onForwardButtonClicked2();
     void on_playSelected1_Button_clicked();
     void on_playSelected2_Button_clicked();
-    void deleteInPlaylist1();
-    void deleteInPlaylist2();
     void on_addToPlaylist1_Button_clicked();
     void on_addToPlaylist2_Button_clicked();
+    void deleteInPlaylist1();
+    void deleteInPlaylist2();
+    void playSelectedTrack1();
+    void playSelectedTrack2();
 };
 
 #endif // PLAYERMAINWINDOW_H

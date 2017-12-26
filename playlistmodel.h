@@ -23,10 +23,16 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool removeRows(int row, int count, const QModelIndex &parent) override;
     bool insertRows(int row, int count, const QModelIndex &parent) override;
+    Qt::DropActions supportedDragActions() const override {return Qt::MoveAction;}
+    Qt::DropActions supportedDropActions() const override {return Qt::MoveAction;}
+    QStringList mimeTypes() const override { return QStringList() << MimeType;}
+    QMimeData* mimeData(const QModelIndexList &indexes) const override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     //Not overloaded functions
     void clearContainer();
     void appendItems(QList<MediaItem>&);
+    void changedData(int top, int bottom);
 
 public slots:
     void onDelButton(QItemSelectionModel *selectionModel);
@@ -34,6 +40,7 @@ public slots:
 
 private:
     QList<MediaItem> *m_container;
+    const QString MimeType = "application/rhpl.pls.bin";
 };
 
 #endif // PLAYLISTMODEL_H

@@ -14,6 +14,7 @@ protected:
 
 signals:
     void buttonDelPress();
+    void buttonEnterPress();
 };
 
 #endif // CUSTOMLISTVIEW_H

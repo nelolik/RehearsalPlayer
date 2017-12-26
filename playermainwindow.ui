@@ -146,16 +146,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="openFile1Button">
-          <property name="text">
-           <string>Открыть файл</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QTabWidget" name="lists1_Widget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="playlist1">
            <attribute name="title">
@@ -179,11 +172,20 @@
               <property name="defaultDropAction">
                <enum>Qt::MoveAction</enum>
               </property>
+              <property name="alternatingRowColors">
+               <bool>false</bool>
+              </property>
               <property name="selectionMode">
                <enum>QAbstractItemView::ExtendedSelection</enum>
               </property>
               <property name="selectionBehavior">
                <enum>QAbstractItemView::SelectRows</enum>
+              </property>
+              <property name="verticalScrollMode">
+               <enum>QAbstractItemView::ScrollPerPixel</enum>
+              </property>
+              <property name="spacing">
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -354,16 +356,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="openFile2Button">
-          <property name="text">
-           <string>Открыть файл</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QTabWidget" name="lists2_Widget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="playlist2">
            <attribute name="title">
@@ -384,11 +379,17 @@
               <property name="defaultDropAction">
                <enum>Qt::MoveAction</enum>
               </property>
+              <property name="alternatingRowColors">
+               <bool>false</bool>
+              </property>
               <property name="selectionMode">
                <enum>QAbstractItemView::ExtendedSelection</enum>
               </property>
               <property name="selectionBehavior">
                <enum>QAbstractItemView::SelectRows</enum>
+              </property>
+              <property name="spacing">
+               <number>1</number>
               </property>
              </widget>
             </item>

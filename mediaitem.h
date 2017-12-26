@@ -4,6 +4,7 @@
 #include <QList>
 
 class QString;
+class QByteArray;
 
 class MediaItem
 {
@@ -15,6 +16,9 @@ public:
 public:
     MediaItem();
     MediaItem(QString file_name, QString file_path);
+    MediaItem(QString file_name, QString file_path, bool is_playing, QList<int> &labels);
+    QByteArray serialize();
+    static MediaItem deserialize(QByteArray&);
 };
 
 #endif // MEDIAITEM_H

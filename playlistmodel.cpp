@@ -5,6 +5,9 @@
 #include <QModelIndex>
 #include <QItemSelectionModel>
 #include <QLinkedList>
+#include <QMimeData>
+#include <QMimeType>
+#include <QBrush>
 #include "mediaitem.h"
 
 
@@ -25,6 +28,16 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
     {
         return m_container->at(index.row()).fileName;
     }
+    if((role == Qt::BackgroundColorRole) && index.isValid())
+    {
+        if(m_container->at(index.row()).isPlaying)
+            return QBrush(Qt::gray);
+    }
+    if((role == Qt::ToolTipRole) && index.isValid())
+    {
+        return m_container->at(index.row()).fileName;
+    }
+
 
     return QVariant();
 }
@@ -51,6 +64,7 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 
 bool PlaylistModel::removeRows(int row, int count, const QModelIndex &parent)
 {
+    Q_UNUSED(parent);
     if(row >= 0 && (row + count) <= m_container->size() && count > 0)
     {
         for(int i = 0; i < count; i++)
@@ -64,6 +78,7 @@ bool PlaylistModel::removeRows(int row, int count, const QModelIndex &parent)
 
 bool PlaylistModel::insertRows(int row, int count, const QModelIndex &parent)
 {
+    Q_UNUSED(parent);
     if(row >= 0 && row <= m_container->size())
     {
         for(int i = 0; i < count; i++)
@@ -111,4 +126,52 @@ void PlaylistModel::appendItems(QList<MediaItem> &items)
     beginInsertRows(QModelIndex(), m_container->size(), items.size() - 1);
     m_container->append(items);
     endInsertRows();
+}
+
+QMimeData* PlaylistModel::mimeData(const QModelIndexList &indexes) const
+{
+    Q_ASSERT(indexes.count());
+    if(indexes.count() != 1)
+    {
+        return 0;
+    }
+    QMimeData *mimeData = new QMimeData;
+    QByteArray binaryData;
+    MediaItem item = m_container->at(indexes.at(0).row());
+    binaryData = item.serialize();
+    mimeData->setData(MimeType, binaryData);
+    return mimeData;
+}
+
+bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    Q_UNUSED(column);
+    int insertRow;
+    if(action == Qt::IgnoreAction)
+        return true;
+    if(action != Qt::MoveAction || !data || !data->hasFormat(MimeType))
+        return false;
+    if(row != -1)
+    {
+        insertRow = row;
+    }
+    else if(parent.isValid())
+    {
+        insertRow = parent.row();
+    }
+    else
+    {
+        return false;
+    }
+    QByteArray binData = data->data(MimeType);
+    MediaItem item = MediaItem::deserialize(binData);
+    beginInsertRows(parent, insertRow, insertRow);
+    m_container->insert(insertRow, item);
+    endInsertRows();
+    return true;
+}
+
+void PlaylistModel::changedData(int top, int bottom)
+{
+    emit dataChanged(index(top), index(bottom));
 }
