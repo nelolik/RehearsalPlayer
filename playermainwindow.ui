@@ -358,7 +358,7 @@
         <item>
          <widget class="QTabWidget" name="lists2_Widget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="playlist2">
            <attribute name="title">
@@ -441,7 +441,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

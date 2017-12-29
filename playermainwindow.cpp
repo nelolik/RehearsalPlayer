@@ -27,8 +27,10 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     filesSelectionModel1->setModel(model1);
     filesSelectionModel2 = new QItemSelectionModel;
     filesSelectionModel2->setModel(model2);
-    QModelIndex rootPath1 = model1->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
-    QModelIndex rootPath2 = model2->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
+//    QModelIndex rootPath1 = model1->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
+//    QModelIndex rootPath2 = model2->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
+    QModelIndex rootPath1 = model1->setRootPath(QString(""));
+    QModelIndex rootPath2 = model2->setRootPath(QString(""));
     ui->folders1_View->setModel(model1);
     ui->folders2_View->setModel(model2);
     ui->folders1_View->setSelectionModel(filesSelectionModel1);
@@ -115,6 +117,8 @@ void PlayerMainWindow::createConnections()
     connect(this, SIGNAL(playListDataChanged2()), ui->playlist2_View, SLOT(update()));
     connect(ui->playlist1_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist1()));
     connect(ui->playlist2_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist2()));
+    connect(ui->playlist1_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick1(QModelIndex)));
+    connect(ui->playlist2_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick2(QModelIndex)));
 
     connect(player1, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged1(int)));
     connect(player2, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged2(int)));
@@ -133,6 +137,10 @@ void PlayerMainWindow::play1clicked()
 {
     if(!player1_isPlaying)
     {
+        if(!player1->audioAvailable())
+        {
+            setFirstTrackInPLaylist(1);
+        }
         player1->play();
         player1_isPlaying = true;
         ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -149,6 +157,10 @@ void PlayerMainWindow::play2clicked()
 {
     if(!player2_isPlaying)
     {
+        if(!player2->audioAvailable())
+        {
+            setFirstTrackInPLaylist(2);
+        }
         player2->play();
         player2_isPlaying = true;
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -193,20 +205,20 @@ void PlayerMainWindow::onDurationChanged1(int time)
 {
     ui->left1lcdNumber->display(time);
     ui->trackPosition1_Slider->setMaximum(time);
-    if(time == 0)
-    {
-        player1_isPlaying = false;
-    }
+//    if(time == 0)
+//    {
+//        player1_isPlaying = false;
+//    }
 }
 
 void PlayerMainWindow::onDurationChanged2(int time)
 {
     ui->left2lcdNumber->display(time);
     ui->trackPosition2_Slider->setMaximum(time);
-    if(time == 0)
-    {
-        player2_isPlaying = false;
-    }
+//    if(time == 0)
+//    {
+//        player2_isPlaying = false;
+//    }
 }
 
 void PlayerMainWindow::onPositionChangged1(int time)
@@ -280,11 +292,6 @@ void PlayerMainWindow::onBackButoonClicked1()
 //    player1->setNewPosition(position - ADD_SINGLE_STEP);
     backButtonClicked = true;
     player1->stop();
-//    selectPrevTrack(playlistContainer1, player1);
-//    if(player1_isPlaying)
-//    {
-//        player1->play();
-//    }
 }
 
 void PlayerMainWindow::onBackButoonClicked2()
@@ -293,11 +300,6 @@ void PlayerMainWindow::onBackButoonClicked2()
 //    player2->setNewPosition(position - ADD_SINGLE_STEP);
     stopButtonClicked = true;
     player2->stop();
-    selectPrevTrack(playlistContainer2, player2);
-    if(player2_isPlaying)
-    {
-        player2->play();
-    }
 }
 
 void PlayerMainWindow::onForwardButtonClicked1()
@@ -554,19 +556,87 @@ void PlayerMainWindow::deleteInPlaylist2()
     playlistModel2->onDelButton(selection);
 }
 
-void PlayerMainWindow::playSelectedTrack1()
+//void PlayerMainWindow::playSelectedTrack1()
+//{
+//    QItemSelectionModel *selection = ui->playlist1_View->selectionModel();
+//    QModelIndexList selectedList = selection->selectedRows(0).at(0);
+//    if(selectedList.size() > 0)
+//    {
+//        player1->stop();
+//        QModelIndex currentTrack = selectedList.at(0);
+//        player1->setFileName(currentTrack.filePath);
+//        int prevTrack = playingTrack(playlistContainer1);
+//        if(prevTrack < playlistContainer1->size())
+//        {
+//            playlistContainer1[prevTrack].isPlaying = false;
+//        }
+//    }
+//}
+
+//void PlayerMainWindow::playSelectedTrack2()
+//{
+
+//}
+
+void PlayerMainWindow::setFirstTrackInPLaylist(int player_number)
 {
-    QItemSelectionModel *selection = ui->playlist1_View->selectionModel();
-    QModelIndexList selectedList = selection->selectedRows(0).at(0);
-    if(selectedList.size() > 0)
-    {
-        player1->stop();
-        QModelIndex currentTrack = selectedList.at(0);
-        player1->setFileName(currentTrack.filePath);
-        int prevTrack = playingTrack(playlistContainer1);
-        if(prevTrack < playlistContainer1->size())
+    switch (player_number) {
+    case 1:
+        if(playlistContainer1->size() > 0)
         {
-            playlistContainer1[prevTrack].isPlaying = false;
+            player1->setFileName(playlistContainer1->at(0).filePath);
+            (*playlistContainer1)[0].isPlaying = true;
         }
+        break;
+    case 2:
+        if(playlistContainer2->size() > 0)
+        {
+            player2->setFileName(playlistContainer2->at(0).filePath);
+            (*playlistContainer2)[0].isPlaying = true;
+        }
+    default:
+        break;
+    }
+}
+
+void PlayerMainWindow::onPlaylistDoubleclick1(QModelIndex clickedItem)
+{
+    if(clickedItem.isValid())
+    {
+        int currentTrack = playingTrack(playlistContainer1);
+        if(currentTrack >= 0 && currentTrack < playlistContainer1->size())
+        {
+            (*playlistContainer1)[currentTrack].isPlaying = false;
+            playlistModel1->changedData(currentTrack, currentTrack);
+        }
+        int clickedNumber = clickedItem.row();
+        player1->stop();
+        player1->setFileName(playlistContainer1->at(clickedNumber).filePath);
+        (*playlistContainer1)[clickedNumber].isPlaying = true;
+        player1->play();
+        player1_isPlaying = true;
+        ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        playlistModel1->changedData(clickedNumber, clickedNumber);
+    }
+}
+
+void PlayerMainWindow::onPlaylistDoubleclick2(QModelIndex clickedItem)
+{
+    if(clickedItem.isValid())
+    {
+        int currentTrack = playingTrack(playlistContainer2);
+        if(currentTrack >= 0 && currentTrack < playlistContainer2->size())
+        {
+            (*playlistContainer2)[currentTrack].isPlaying = false;
+            playlistModel2->changedData(currentTrack, currentTrack);
+        }
+        int clickedNumber = clickedItem.row();
+        player2->stop();
+        player2->setFileName(playlistContainer2->at(clickedNumber).filePath);
+        (*playlistContainer2)[clickedNumber].isPlaying = true;
+        player2->play();
+        player2_isPlaying = true;
+        ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        playlistModel2->changedData(clickedNumber, clickedNumber);
     }
 }

@@ -25,6 +25,7 @@ public:
     void play();
     void stop();
     void setNewPosition(int);
+    bool audioAvailable();
 
 signals:
     void playStart();

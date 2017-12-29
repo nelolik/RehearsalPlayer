@@ -93,3 +93,8 @@ void SoundPlayer::onStateChaged(QMediaPlayer::State state)
         emit playbackStoped(state);
     }
 }
+
+bool SoundPlayer::audioAvailable()
+{
+    return m_mpl->isAudioAvailable();
+}

@@ -46,6 +46,7 @@ private:
     int playingTrack(QList<MediaItem>*);
     int selectNextTrack(QList<MediaItem>* playlist, SoundPlayer *player);
     int selectPrevTrack(QList<MediaItem>* playlist, SoundPlayer *player);
+    void setFirstTrackInPLaylist(int player_number);
 
 signals:
     void setMediaPlaylist1(QMediaPlaylist*);
@@ -79,8 +80,10 @@ private slots:
     void on_addToPlaylist2_Button_clicked();
     void deleteInPlaylist1();
     void deleteInPlaylist2();
-    void playSelectedTrack1();
-    void playSelectedTrack2();
+    void onPlaylistDoubleclick1(QModelIndex);
+    void onPlaylistDoubleclick2(QModelIndex);
+//    void playSelectedTrack1();
+//    void playSelectedTrack2();
 };
 
 #endif // PLAYERMAINWINDOW_H

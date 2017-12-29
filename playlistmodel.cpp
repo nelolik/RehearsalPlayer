@@ -123,7 +123,7 @@ void PlaylistModel::appendItems(QList<MediaItem> &items)
     {
         return;
     }
-    beginInsertRows(QModelIndex(), m_container->size(), items.size() - 1);
+    beginInsertRows(QModelIndex(), m_container->size(), m_container->size() + items.size() - 1);
     m_container->append(items);
     endInsertRows();
 }
