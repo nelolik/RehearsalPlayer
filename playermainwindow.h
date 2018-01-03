@@ -82,6 +82,8 @@ private slots:
     void deleteInPlaylist2();
     void onPlaylistDoubleclick1(QModelIndex);
     void onPlaylistDoubleclick2(QModelIndex);
+    void onKeySpace1();
+    void onKeySpace2();
 //    void playSelectedTrack1();
 //    void playSelectedTrack2();
 };

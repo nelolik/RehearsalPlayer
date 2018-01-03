@@ -15,6 +15,18 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <property name="leftMargin">
+     <number>6</number>
+    </property>
+    <property name="topMargin">
+     <number>6</number>
+    </property>
+    <property name="rightMargin">
+     <number>6</number>
+    </property>
+    <property name="bottomMargin">
+     <number>6</number>
+    </property>
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
@@ -23,206 +35,273 @@
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="player1_Layout">
         <item>
-         <layout class="QHBoxLayout" name="timeOutNames1_Layout">
-          <item>
-           <widget class="QLabel" name="elepsed1Lable">
-            <property name="text">
-             <string>Воспроизведено</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="left1Lbl">
-            <property name="text">
-             <string>Осталось</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="timeOutput1_Layout">
-          <item>
-           <widget class="QLCDNumber" name="elepsed1lcdNumber">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>50</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLCDNumber" name="left1lcdNumber">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>50</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="buttons1_Layout">
-          <property name="spacing">
-           <number>20</number>
+         <widget class="BasePanel" name="leftPanelBaseWidget">
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
           </property>
-          <property name="leftMargin">
-           <number>20</number>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="topMargin">
-           <number>20</number>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
           </property>
-          <property name="rightMargin">
-           <number>20</number>
+          <property name="lineWidth">
+           <number>1</number>
           </property>
-          <property name="bottomMargin">
-           <number>20</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="back1Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="play1Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="stop1Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="forward1Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QSlider" name="trackPosition1_Slider">
-          <property name="maximum">
-           <number>0</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTabWidget" name="lists1_Widget">
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <widget class="QWidget" name="playlist1">
-           <attribute name="title">
-            <string>Плейлист</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <item>
-             <widget class="CustomListView" name="playlist1_View">
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
-              </property>
-              <property name="dragEnabled">
-               <bool>true</bool>
-              </property>
-              <property name="dragDropMode">
-               <enum>QAbstractItemView::InternalMove</enum>
-              </property>
-              <property name="defaultDropAction">
-               <enum>Qt::MoveAction</enum>
-              </property>
-              <property name="alternatingRowColors">
-               <bool>false</bool>
-              </property>
-              <property name="selectionMode">
-               <enum>QAbstractItemView::ExtendedSelection</enum>
-              </property>
-              <property name="selectionBehavior">
-               <enum>QAbstractItemView::SelectRows</enum>
-              </property>
-              <property name="verticalScrollMode">
-               <enum>QAbstractItemView::ScrollPerPixel</enum>
-              </property>
-              <property name="spacing">
-               <number>1</number>
-              </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="timeOutNames1_Layout">
+             <item>
+              <widget class="QLabel" name="elepsed1Lable">
+               <property name="text">
+                <string>Воспроизведено</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="left1Lbl">
+               <property name="text">
+                <string>Осталось</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="timeOutput1_Layout">
+             <item>
+              <widget class="QLCDNumber" name="elepsed1lcdNumber">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="left1lcdNumber">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="buttons1_Layout">
+             <property name="spacing">
+              <number>20</number>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="back1Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="play1Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="stop1Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="forward1Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QSlider" name="trackPosition1_Slider">
+             <property name="maximum">
+              <number>0</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTabWidget" name="lists1_Widget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="playlist1">
+              <attribute name="title">
+               <string>Плейлист</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_5">
+               <item>
+                <widget class="CustomListView" name="playlist1_View">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhNone</set>
+                 </property>
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="dragEnabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="dragDropMode">
+                  <enum>QAbstractItemView::InternalMove</enum>
+                 </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::MoveAction</enum>
+                 </property>
+                 <property name="alternatingRowColors">
+                  <bool>false</bool>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::ExtendedSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                 <property name="verticalScrollMode">
+                  <enum>QAbstractItemView::ScrollPerPixel</enum>
+                 </property>
+                 <property name="spacing">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="folders1">
-           <attribute name="title">
-            <string>Папки</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <layout class="QVBoxLayout" name="folders1_Layout">
-              <item>
-               <widget class="QTreeView" name="folders1_View"/>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="foldersBtns1_Layout">
-                <item>
-                 <widget class="QPushButton" name="playSelected1_Button">
-                  <property name="text">
-                   <string>Воспроизвести</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="addToPlaylist1_Button">
-                  <property name="text">
-                   <string>Добавить в плейлист</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
+             <widget class="QWidget" name="folders1">
+              <attribute name="title">
+               <string>Папки</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <layout class="QVBoxLayout" name="folders1_Layout">
+                 <item>
+                  <widget class="QTreeView" name="folders1_View">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="foldersBtns1_Layout">
+                   <item>
+                    <widget class="QPushButton" name="playSelected1_Button">
+                     <property name="text">
+                      <string>Воспроизвести</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="addToPlaylist1_Button">
+                     <property name="text">
+                      <string>Добавить в плейлист</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -230,203 +309,279 @@
       <widget class="QWidget" name="verticalLayoutWidget_2">
        <layout class="QVBoxLayout" name="player2_Layout">
         <item>
-         <layout class="QHBoxLayout" name="timeOutNames2_Layout">
-          <item>
-           <widget class="QLabel" name="elepsed2Lable">
-            <property name="text">
-             <string>Воспроизведено</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="left2Lbl">
-            <property name="text">
-             <string>Осталось</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="timeOutput2_Layout">
-          <item>
-           <widget class="QLCDNumber" name="elepsed2lcdNumber">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>50</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLCDNumber" name="left2lcdNumber">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>50</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="buttons2_Layout">
-          <property name="spacing">
-           <number>20</number>
+         <widget class="BasePanel" name="rightPanelBaseWidget">
+          <property name="cursor">
+           <cursorShape>ArrowCursor</cursorShape>
           </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
           </property>
-          <property name="leftMargin">
-           <number>20</number>
+          <property name="styleSheet">
+           <string notr="true"/>
           </property>
-          <property name="topMargin">
-           <number>20</number>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="rightMargin">
-           <number>20</number>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
           </property>
-          <property name="bottomMargin">
-           <number>20</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="back2Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="play2Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="stop2Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="forward2Button">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QSlider" name="trackPosition2_Slider">
-          <property name="maximum">
-           <number>0</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTabWidget" name="lists2_Widget">
-          <property name="currentIndex">
+          <property name="lineWidth">
            <number>1</number>
           </property>
-          <widget class="QWidget" name="playlist2">
-           <attribute name="title">
-            <string>Плейлист</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <item>
-             <widget class="CustomListView" name="playlist2_View">
-              <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
-              </property>
-              <property name="dragEnabled">
-               <bool>true</bool>
-              </property>
-              <property name="dragDropMode">
-               <enum>QAbstractItemView::InternalMove</enum>
-              </property>
-              <property name="defaultDropAction">
-               <enum>Qt::MoveAction</enum>
-              </property>
-              <property name="alternatingRowColors">
-               <bool>false</bool>
-              </property>
-              <property name="selectionMode">
-               <enum>QAbstractItemView::ExtendedSelection</enum>
-              </property>
-              <property name="selectionBehavior">
-               <enum>QAbstractItemView::SelectRows</enum>
-              </property>
-              <property name="spacing">
-               <number>1</number>
-              </property>
+          <property name="midLineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="timeOutNames2_Layout">
+             <item>
+              <widget class="QLabel" name="elepsed2Lable">
+               <property name="text">
+                <string>Воспроизведено</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="left2Lbl">
+               <property name="text">
+                <string>Осталось</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="timeOutput2_Layout">
+             <item>
+              <widget class="QLCDNumber" name="elepsed2lcdNumber">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="left2lcdNumber">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="buttons2_Layout">
+             <property name="spacing">
+              <number>20</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="back2Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="play2Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="stop2Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="forward2Button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QSlider" name="trackPosition2_Slider">
+             <property name="maximum">
+              <number>0</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTabWidget" name="lists2_Widget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="playlist2">
+              <attribute name="title">
+               <string>Плейлист</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <widget class="CustomListView" name="playlist2_View">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="dragEnabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="dragDropMode">
+                  <enum>QAbstractItemView::InternalMove</enum>
+                 </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::MoveAction</enum>
+                 </property>
+                 <property name="alternatingRowColors">
+                  <bool>false</bool>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::ExtendedSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                 <property name="spacing">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="folders2">
-           <attribute name="title">
-            <string>Папки</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <layout class="QVBoxLayout" name="folders2_Layout">
-              <item>
-               <widget class="QTreeView" name="folders2_View"/>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="foldersBtns2_Layout">
-                <item>
-                 <widget class="QPushButton" name="playSelected2_Button">
-                  <property name="text">
-                   <string>Воспроизвести</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="addToPlaylist2_Button">
-                  <property name="text">
-                   <string>Добавить в плейлист</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
+             <widget class="QWidget" name="folders2">
+              <attribute name="title">
+               <string>Папки</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <layout class="QVBoxLayout" name="folders2_Layout">
+                 <item>
+                  <widget class="QTreeView" name="folders2_View">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="foldersBtns2_Layout">
+                   <item>
+                    <widget class="QPushButton" name="playSelected2_Button">
+                     <property name="text">
+                      <string>Воспроизвести</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="addToPlaylist2_Button">
+                     <property name="text">
+                      <string>Добавить в плейлист</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -441,7 +596,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -461,6 +616,12 @@
    <class>CustomListView</class>
    <extends>QListView</extends>
    <header>customlistview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BasePanel</class>
+   <extends>QFrame</extends>
+   <header>basepanel.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

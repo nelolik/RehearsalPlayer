@@ -30,14 +30,16 @@ SOURCES += \
     soundplayer.cpp \
     playlistmodel.cpp \
     customlistview.cpp \
-    mediaitem.cpp
+    mediaitem.cpp \
+    basepanel.cpp
 
 HEADERS += \
         playermainwindow.h \
     soundplayer.h \
     playlistmodel.h \
     customlistview.h \
-    mediaitem.h
+    mediaitem.h \
+    basepanel.h
 
 FORMS += \
         playermainwindow.ui

@@ -119,6 +119,8 @@ void PlayerMainWindow::createConnections()
     connect(ui->playlist2_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist2()));
     connect(ui->playlist1_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick1(QModelIndex)));
     connect(ui->playlist2_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick2(QModelIndex)));
+    connect(ui->leftPanelBaseWidget, SIGNAL(keySpacePressed()), this, SLOT(onKeySpace1()));
+    connect(ui->rightPanelBaseWidget, SIGNAL(keySpacePressed()),this, SLOT(onKeySpace2()));
 
     connect(player1, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged1(int)));
     connect(player2, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged2(int)));
@@ -639,4 +641,14 @@ void PlayerMainWindow::onPlaylistDoubleclick2(QModelIndex clickedItem)
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         playlistModel2->changedData(clickedNumber, clickedNumber);
     }
+}
+
+void PlayerMainWindow::onKeySpace1()
+{
+    int i = 5;
+}
+
+void PlayerMainWindow::onKeySpace2()
+{
+    int i = 5;
 }
