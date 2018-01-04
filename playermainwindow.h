@@ -46,7 +46,7 @@ private:
     int playingTrack(QList<MediaItem>*);
     int selectNextTrack(QList<MediaItem>* playlist, SoundPlayer *player);
     int selectPrevTrack(QList<MediaItem>* playlist, SoundPlayer *player);
-    void setFirstTrackInPLaylist(int player_number);
+    bool setFirstTrackInPLaylist(int player_number);
 
 signals:
     void setMediaPlaylist1(QMediaPlaylist*);

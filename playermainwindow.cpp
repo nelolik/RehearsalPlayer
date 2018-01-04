@@ -66,6 +66,12 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     ui->trackPosition2_Slider->setTickPosition(QSlider::TicksBothSides);
     ui->trackPosition2_Slider->setTickInterval(10);
 
+    ui->volume1Slider->setValue(80);
+    ui->volume1Slider->setTickPosition(QSlider::TicksBothSides);
+    ui->volume1Slider->setTickInterval(10);
+    ui->volume2Slider->setValue(80);
+    ui->volume2Slider->setTickPosition(QSlider::TicksBothSides);
+    ui->volume2Slider->setTickInterval(10);
 
     player1 = new SoundPlayer(this);
     player2 = new SoundPlayer(this);
@@ -130,6 +136,8 @@ void PlayerMainWindow::createConnections()
     connect(player2, SIGNAL(setLeftTime(int)), ui->left2lcdNumber, SLOT(display(int)));
     connect(player1, SIGNAL(playbackStoped(QMediaPlayer::State)), this, SLOT(onPlaybackStoped1(QMediaPlayer::State)));
     connect(player2, SIGNAL(playbackStoped(QMediaPlayer::State)), this, SLOT(onPlaybackStoped2(QMediaPlayer::State)));
+    connect(ui->volume1Slider, SIGNAL(sliderMoved(int)), player1, SLOT(setVolume(int)));
+    connect(ui->volume2Slider, SIGNAL(sliderMoved(int)), player2, SLOT(setVolume(int)));
 
 }
 
@@ -141,7 +149,10 @@ void PlayerMainWindow::play1clicked()
     {
         if(!player1->audioAvailable())
         {
-            setFirstTrackInPLaylist(1);
+            if(!setFirstTrackInPLaylist(1))
+            {
+                return;
+            }
         }
         player1->play();
         player1_isPlaying = true;
@@ -161,7 +172,10 @@ void PlayerMainWindow::play2clicked()
     {
         if(!player2->audioAvailable())
         {
-            setFirstTrackInPLaylist(2);
+            if(!setFirstTrackInPLaylist(2))
+            {
+                return;
+            }
         }
         player2->play();
         player2_isPlaying = true;
@@ -580,7 +594,7 @@ void PlayerMainWindow::deleteInPlaylist2()
 
 //}
 
-void PlayerMainWindow::setFirstTrackInPLaylist(int player_number)
+bool PlayerMainWindow::setFirstTrackInPLaylist(int player_number)
 {
     switch (player_number) {
     case 1:
@@ -588,16 +602,26 @@ void PlayerMainWindow::setFirstTrackInPLaylist(int player_number)
         {
             player1->setFileName(playlistContainer1->at(0).filePath);
             (*playlistContainer1)[0].isPlaying = true;
+            return true;
         }
-        break;
+        else
+        {
+            return false;
+        }
     case 2:
         if(playlistContainer2->size() > 0)
         {
             player2->setFileName(playlistContainer2->at(0).filePath);
             (*playlistContainer2)[0].isPlaying = true;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     default:
-        break;
+
+        return false;
     }
 }
 

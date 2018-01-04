@@ -98,3 +98,8 @@ bool SoundPlayer::audioAvailable()
 {
     return m_mpl->isAudioAvailable();
 }
+
+void SoundPlayer::setVolume(int volume)
+{
+    m_mpl->setVolume(volume);
+}

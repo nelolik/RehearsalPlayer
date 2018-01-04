@@ -42,6 +42,7 @@ private slots:
     void changedDuration(qint64);
     void onAudioAvailableChanged(bool available);
     void onStateChaged(QMediaPlayer::State);
+    void setVolume(int volume);
 
 public slots:
 };
