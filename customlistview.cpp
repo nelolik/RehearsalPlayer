@@ -15,7 +15,7 @@ void CustomListView::keyPressEvent(QKeyEvent *event)
         event->accept();
         emit buttonDelPress();
     }
-    else if(event->key() == Qt::Key_Enter)
+    else if(event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
         event->accept();
         emit buttonEnterPress();

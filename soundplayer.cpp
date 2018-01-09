@@ -1,5 +1,6 @@
 #include "soundplayer.h"
 #include <QMediaPlayer>
+#include <QTime>
 
 SoundPlayer::SoundPlayer(QObject *parent) : QObject(parent),
 
@@ -55,7 +56,8 @@ void SoundPlayer::changedPosition(qint64 time)
     elepsed_time = (int)(time/1000);
     emit setPosition(elepsed_time);
     elepsed_time = total_time - elepsed_time;
-    emit setLeftTime(elepsed_time);
+    QTime left(elepsed_time / 3600, elepsed_time % 3600 / 60, elepsed_time % 60);
+    emit setLeftTime(left.toString("mm:ss"));
 }
 
 void SoundPlayer::changedDuration(qint64 time)

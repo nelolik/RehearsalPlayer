@@ -11,6 +11,7 @@
 #include <QList>
 #include <QMediaPlaylist>
 #include <QModelIndex>
+#include <QTime>
 
 PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -79,9 +80,14 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     playlistContainer2 = new QList<MediaItem>;
     playlistModel1 = new PlaylistModel(playlistContainer1, this);
     playlistModel2 = new PlaylistModel(playlistContainer2, this);
+    playlistSelectionModel1 = new QItemSelectionModel;
+    playlistSelectionModel2 = new QItemSelectionModel;
+    playlistSelectionModel1->setModel(playlistModel1);
+    playlistSelectionModel2->setModel(playlistModel2);
     ui->playlist1_View->setModel(playlistModel1);
     ui->playlist2_View->setModel(playlistModel2);
-
+    ui->playlist1_View->setSelectionModel(playlistSelectionModel1);
+    ui->playlist2_View->setSelectionModel(playlistSelectionModel2);
 
     soundExtentions = new QStringList;
     *soundExtentions << "wav" << "mp3" << "wma" << "aiff" << "flac";
@@ -125,6 +131,8 @@ void PlayerMainWindow::createConnections()
     connect(ui->playlist2_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist2()));
     connect(ui->playlist1_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick1(QModelIndex)));
     connect(ui->playlist2_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick2(QModelIndex)));
+    connect(ui->playlist1_View, SIGNAL(buttonEnterPress()), this, SLOT(playSelectedTrack1()));
+    connect(ui->playlist2_View, SIGNAL(buttonEnterPress()), this, SLOT(playSelectedTrack2()));
     connect(ui->leftPanelBaseWidget, SIGNAL(keySpacePressed()), this, SLOT(onKeySpace1()));
     connect(ui->rightPanelBaseWidget, SIGNAL(keySpacePressed()),this, SLOT(onKeySpace2()));
 
@@ -132,12 +140,12 @@ void PlayerMainWindow::createConnections()
     connect(player2, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged2(int)));
     connect(player1, SIGNAL(setPosition(int)), this, SLOT(onPositionChangged1(int)));
     connect(player2, SIGNAL(setPosition(int)), this, SLOT(onPositionChangged2(int)));
-    connect(player1, SIGNAL(setLeftTime(int)), ui->left1lcdNumber, SLOT(display(int)));
-    connect(player2, SIGNAL(setLeftTime(int)), ui->left2lcdNumber, SLOT(display(int)));
+    connect(player1, SIGNAL(setLeftTime(QString)), ui->left1lcdNumber, SLOT(display(QString)));
+    connect(player2, SIGNAL(setLeftTime(QString)), ui->left2lcdNumber, SLOT(display(QString)));
     connect(player1, SIGNAL(playbackStoped(QMediaPlayer::State)), this, SLOT(onPlaybackStoped1(QMediaPlayer::State)));
     connect(player2, SIGNAL(playbackStoped(QMediaPlayer::State)), this, SLOT(onPlaybackStoped2(QMediaPlayer::State)));
-    connect(ui->volume1Slider, SIGNAL(sliderMoved(int)), player1, SLOT(setVolume(int)));
-    connect(ui->volume2Slider, SIGNAL(sliderMoved(int)), player2, SLOT(setVolume(int)));
+    connect(ui->volume1Slider, SIGNAL(valueChanged(int)), player1, SLOT(setVolume(int)));
+    connect(ui->volume2Slider, SIGNAL(valueChanged(int)), player2, SLOT(setVolume(int)));
 
 }
 
@@ -219,7 +227,8 @@ void PlayerMainWindow::stop2clicked()
 
 void PlayerMainWindow::onDurationChanged1(int time)
 {
-    ui->left1lcdNumber->display(time);
+    QTime length(time / 3600, time % 3600 / 60, time % 60);
+    ui->left1lcdNumber->display(length.toString("mm:ss"));
     ui->trackPosition1_Slider->setMaximum(time);
 //    if(time == 0)
 //    {
@@ -229,7 +238,8 @@ void PlayerMainWindow::onDurationChanged1(int time)
 
 void PlayerMainWindow::onDurationChanged2(int time)
 {
-    ui->left2lcdNumber->display(time);
+    QTime length(time / 3600, time % 3600 / 60, time % 60);
+    ui->left2lcdNumber->display(length.toString("mm:ss"));
     ui->trackPosition2_Slider->setMaximum(time);
 //    if(time == 0)
 //    {
@@ -239,13 +249,15 @@ void PlayerMainWindow::onDurationChanged2(int time)
 
 void PlayerMainWindow::onPositionChangged1(int time)
 {
-    ui->elepsed1lcdNumber->display(time);
+    QTime length(time / 3600, time % 3600 / 60, time % 60);
+    ui->elepsed1lcdNumber->display(length.toString("mm:ss"));
     ui->trackPosition1_Slider->setValue(time);
 }
 
 void PlayerMainWindow::onPositionChangged2(int time)
 {
-    ui->elepsed2lcdNumber->display(time);
+    QTime length(time / 3600, time % 3600 / 60, time % 60);
+    ui->elepsed2lcdNumber->display(length.toString("mm:ss"));
     ui->trackPosition2_Slider->setValue(time);
 }
 
@@ -669,10 +681,54 @@ void PlayerMainWindow::onPlaylistDoubleclick2(QModelIndex clickedItem)
 
 void PlayerMainWindow::onKeySpace1()
 {
-    int i = 5;
+    play1clicked();
 }
 
 void PlayerMainWindow::onKeySpace2()
 {
-    int i = 5;
+    play2clicked();
+}
+
+void PlayerMainWindow::playSelectedTrack1()
+{
+    QModelIndexList indexes = playlistSelectionModel1->selectedIndexes();
+    if(indexes.size() == 1 && indexes.at(0).isValid())
+    {
+        int selected_track = indexes.at(0).row();
+        int currentTrack = playingTrack(playlistContainer1);
+        if(currentTrack >= 0 && currentTrack < playlistContainer1->size())
+        {
+            (*playlistContainer1)[currentTrack].isPlaying = false;
+            playlistModel1->changedData(currentTrack, currentTrack);
+        }
+        player1->stop();
+        player1->setFileName(playlistContainer1->at(selected_track).filePath);
+        (*playlistContainer1)[selected_track].isPlaying = true;
+        player1->play();
+        player1_isPlaying = true;
+        ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        playlistModel1->changedData(selected_track, selected_track);
+    }
+}
+
+void PlayerMainWindow::playSelectedTrack2()
+{
+    QModelIndexList indexes = playlistSelectionModel2->selectedIndexes();
+    if(indexes.size() == 1 && indexes.at(0).isValid())
+    {
+        int selected_track = indexes.at(0).row();
+        int currentTrack = playingTrack(playlistContainer2);
+        if(currentTrack >= 0 && currentTrack < playlistContainer2->size())
+        {
+            (*playlistContainer2)[currentTrack].isPlaying = false;
+            playlistModel2->changedData(currentTrack, currentTrack);
+        }
+        player2->stop();
+        player2->setFileName(playlistContainer2->at(selected_track).filePath);
+        (*playlistContainer2)[selected_track].isPlaying = true;
+        player2->play();
+        player2_isPlaying = true;
+        ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        playlistModel2->changedData(selected_track, selected_track);
+    }
 }

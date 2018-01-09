@@ -37,6 +37,7 @@ private:
     QFileSystemModel *model1;
     QFileSystemModel *model2;
     QItemSelectionModel *filesSelectionModel1, *filesSelectionModel2;
+    QItemSelectionModel *playlistSelectionModel1, *playlistSelectionModel2;
     QList<MediaItem> *playlistContainer1, *playlistContainer2;
     QStringList *soundExtentions;
     QMediaPlaylist *mediaPlaylist1, *mediaPlaylist2;
@@ -84,8 +85,8 @@ private slots:
     void onPlaylistDoubleclick2(QModelIndex);
     void onKeySpace1();
     void onKeySpace2();
-//    void playSelectedTrack1();
-//    void playSelectedTrack2();
+    void playSelectedTrack1();
+    void playSelectedTrack2();
 };
 
 #endif // PLAYERMAINWINDOW_H

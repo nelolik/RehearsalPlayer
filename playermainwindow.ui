@@ -247,7 +247,7 @@
               <enum>Qt::NoFocus</enum>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="playlist1">
               <attribute name="title">
@@ -257,7 +257,7 @@
                <item>
                 <widget class="CustomListView" name="playlist1_View">
                  <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
+                  <enum>Qt::ClickFocus</enum>
                  </property>
                  <property name="inputMethodHints">
                   <set>Qt::ImhNone</set>
@@ -575,7 +575,7 @@
               <enum>Qt::NoFocus</enum>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="playlist2">
               <attribute name="title">
@@ -585,7 +585,7 @@
                <item>
                 <widget class="CustomListView" name="playlist2_View">
                  <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
+                  <enum>Qt::ClickFocus</enum>
                  </property>
                  <property name="editTriggers">
                   <set>QAbstractItemView::NoEditTriggers</set>

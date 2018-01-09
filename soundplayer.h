@@ -32,7 +32,7 @@ signals:
     void playStop();
     void pause();
     void setPosition(int);
-    void setLeftTime(int);
+    void setLeftTime(QString);
     void setDuration(int);
     void setPlaylist(QMediaPlaylist*);
     void playbackStoped(QMediaPlayer::State);
