@@ -25,3 +25,15 @@ void CustomListView::keyPressEvent(QKeyEvent *event)
         event->ignore();
     }
 }
+
+void CustomListView::focusInEvent(QFocusEvent *event)
+{
+    emit sendFocusState(true);
+    QListView::focusInEvent(event);
+}
+
+void CustomListView::focusOutEvent(QFocusEvent *event)
+{
+    emit sendFocusState(false);
+    QListView::focusOutEvent(event);
+}

@@ -12,6 +12,7 @@
 #include <QMediaPlaylist>
 #include <QModelIndex>
 #include <QTime>
+#include <qwindowdefs.h>
 
 PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,10 +29,10 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     filesSelectionModel1->setModel(model1);
     filesSelectionModel2 = new QItemSelectionModel;
     filesSelectionModel2->setModel(model2);
-//    QModelIndex rootPath1 = model1->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
-//    QModelIndex rootPath2 = model2->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
-    QModelIndex rootPath1 = model1->setRootPath(QString(""));
-    QModelIndex rootPath2 = model2->setRootPath(QString(""));
+    QModelIndex rootPath1 = model1->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
+    QModelIndex rootPath2 = model2->setRootPath(QString("/mnt/9A54ACA054AC809D/Users/home/Music/Music_D/"));
+//    QModelIndex rootPath1 = model1->setRootPath(QString(""));
+//    QModelIndex rootPath2 = model2->setRootPath(QString(""));
     ui->folders1_View->setModel(model1);
     ui->folders2_View->setModel(model2);
     ui->folders1_View->setSelectionModel(filesSelectionModel1);
@@ -135,6 +136,8 @@ void PlayerMainWindow::createConnections()
     connect(ui->playlist2_View, SIGNAL(buttonEnterPress()), this, SLOT(playSelectedTrack2()));
     connect(ui->leftPanelBaseWidget, SIGNAL(keySpacePressed()), this, SLOT(onKeySpace1()));
     connect(ui->rightPanelBaseWidget, SIGNAL(keySpacePressed()),this, SLOT(onKeySpace2()));
+    connect(ui->playlist1_View, SIGNAL(sendFocusState(bool)), ui->leftPanelBaseWidget, SLOT(setFocusState(bool)));
+    connect(ui->playlist2_View, SIGNAL(sendFocusState(bool)), ui->rightPanelBaseWidget, SLOT(setFocusState(bool)));
 
     connect(player1, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged1(int)));
     connect(player2, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged2(int)));
