@@ -12,14 +12,17 @@
 #include <QMediaPlaylist>
 #include <QModelIndex>
 #include <QTime>
+#include <QTimer>
 #include <qwindowdefs.h>
+#include "settings_dialog.h"
 
 PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PlayerMainWindow),
     player1_isPlaying(false), player2_isPlaying(false),
     goToNextTrack1(true), goToNextTrack2(true),
-    stopButtonClicked(false), forwardButtonClicked(false), backButtonClicked(false)
+    stopButtonClicked(false), forwardButtonClicked(false), backButtonClicked(false),
+    stop2ndPanel(false), fadingStop(true), fadingTime(2)
 {
     ui->setupUi(this);
 
@@ -96,7 +99,8 @@ PlayerMainWindow::PlayerMainWindow(QWidget *parent) :
     mediaPlaylist1 = new QMediaPlaylist;
     mediaPlaylist2 = new QMediaPlaylist;
 
-
+    timer1 = new QTimer(this);
+    timer2 = new QTimer(this);
     createConnections();
 
 
@@ -108,6 +112,8 @@ PlayerMainWindow::~PlayerMainWindow()
     delete playlistContainer1;
     delete playlistContainer2;
     delete soundExtentions;
+    delete timer1;
+    delete timer2;
 }
 
 void PlayerMainWindow::createConnections()
@@ -127,7 +133,6 @@ void PlayerMainWindow::createConnections()
     connect(ui->forward1Button, SIGNAL(clicked(bool)), this, SLOT(onForwardButtonClicked1()));
     connect(ui->forward2Button, SIGNAL(clicked(bool)), this, SLOT(onForwardButtonClicked2()));
     connect(this, SIGNAL(repaintRect(QRect)), ui->playlist1_View, SLOT(repaint(const QRect&)));
-    connect(this, SIGNAL(playListDataChanged2()), ui->playlist2_View, SLOT(update()));
     connect(ui->playlist1_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist1()));
     connect(ui->playlist2_View, SIGNAL(buttonDelPress()), this, SLOT(deleteInPlaylist2()));
     connect(ui->playlist1_View, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistDoubleclick1(QModelIndex)));
@@ -138,6 +143,7 @@ void PlayerMainWindow::createConnections()
     connect(ui->rightPanelBaseWidget, SIGNAL(keySpacePressed()),this, SLOT(onKeySpace2()));
     connect(ui->playlist1_View, SIGNAL(sendFocusState(bool)), ui->leftPanelBaseWidget, SLOT(setFocusState(bool)));
     connect(ui->playlist2_View, SIGNAL(sendFocusState(bool)), ui->rightPanelBaseWidget, SLOT(setFocusState(bool)));
+    connect(ui->actionSettings, SIGNAL(triggered(bool)), this, SLOT(onActionSettings()));
 
     connect(player1, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged1(int)));
     connect(player2, SIGNAL(setDuration(int)), this, SLOT(onDurationChanged2(int)));
@@ -150,6 +156,8 @@ void PlayerMainWindow::createConnections()
     connect(ui->volume1Slider, SIGNAL(valueChanged(int)), player1, SLOT(setVolume(int)));
     connect(ui->volume2Slider, SIGNAL(valueChanged(int)), player2, SLOT(setVolume(int)));
 
+    connect(timer1, SIGNAL(timeout()), this, SLOT(onTimerTimeout1()));
+    connect(timer2, SIGNAL(timeout()), this, SLOT(onTimerTimeout2()));
 }
 
 
@@ -165,6 +173,7 @@ void PlayerMainWindow::play1clicked()
                 return;
             }
         }
+        player1->setVolume(ui->volume1Slider->value());
         player1->play();
         player1_isPlaying = true;
         ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -174,6 +183,10 @@ void PlayerMainWindow::play1clicked()
         player1->pause();
         player1_isPlaying = false;
         ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    }
+    if(stop2ndPanel)
+    {
+        stop2clicked();
     }
 }
 
@@ -188,6 +201,7 @@ void PlayerMainWindow::play2clicked()
                 return;
             }
         }
+        player2->setVolume(ui->volume2Slider->value());
         player2->play();
         player2_isPlaying = true;
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -198,12 +212,23 @@ void PlayerMainWindow::play2clicked()
         player2_isPlaying = false;
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
+    if(stop2ndPanel)
+    {
+        stop1clicked();
+    }
 }
 
 void PlayerMainWindow::stop1clicked()
 {
     stopButtonClicked = true;
-    player1->stop();
+    if(fadingStop)
+    {
+        setFadingVolume(player1, timer1);
+    }
+    else
+    {
+        player1->stop();
+    }
     player1_isPlaying = false;
 //    foreach (MediaItem item, *playlistContainer1) {
 //        if(item.isPlaying)
@@ -217,7 +242,14 @@ void PlayerMainWindow::stop1clicked()
 void PlayerMainWindow::stop2clicked()
 {
     stopButtonClicked = true;
-    player2->stop();
+    if(fadingStop)
+    {
+        setFadingVolume(player2, timer2);
+    }
+    else
+    {
+        player2->stop();
+    }
     player2_isPlaying = false;
 //    foreach (MediaItem item, *playlistContainer2) {
 //        if(item.isPlaying)
@@ -329,7 +361,7 @@ void PlayerMainWindow::onBackButoonClicked2()
 {
 //    int position = ui->trackPosition2_Slider->value();
 //    player2->setNewPosition(position - ADD_SINGLE_STEP);
-    stopButtonClicked = true;
+    backButtonClicked = true;
     player2->stop();
 }
 
@@ -380,6 +412,10 @@ void PlayerMainWindow::on_playSelected1_Button_clicked()
         player1_isPlaying = true;
         ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
+    if(stop2ndPanel)
+    {
+        stop2clicked();
+    }
 
 }
 
@@ -407,6 +443,10 @@ void PlayerMainWindow::on_playSelected2_Button_clicked()
         player2->play();
         player2_isPlaying = true;
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    }
+    if(stop2ndPanel)
+    {
+        stop1clicked();
     }
 }
 
@@ -587,28 +627,6 @@ void PlayerMainWindow::deleteInPlaylist2()
     playlistModel2->onDelButton(selection);
 }
 
-//void PlayerMainWindow::playSelectedTrack1()
-//{
-//    QItemSelectionModel *selection = ui->playlist1_View->selectionModel();
-//    QModelIndexList selectedList = selection->selectedRows(0).at(0);
-//    if(selectedList.size() > 0)
-//    {
-//        player1->stop();
-//        QModelIndex currentTrack = selectedList.at(0);
-//        player1->setFileName(currentTrack.filePath);
-//        int prevTrack = playingTrack(playlistContainer1);
-//        if(prevTrack < playlistContainer1->size())
-//        {
-//            playlistContainer1[prevTrack].isPlaying = false;
-//        }
-//    }
-//}
-
-//void PlayerMainWindow::playSelectedTrack2()
-//{
-
-//}
-
 bool PlayerMainWindow::setFirstTrackInPLaylist(int player_number)
 {
     switch (player_number) {
@@ -654,10 +672,15 @@ void PlayerMainWindow::onPlaylistDoubleclick1(QModelIndex clickedItem)
         player1->stop();
         player1->setFileName(playlistContainer1->at(clickedNumber).filePath);
         (*playlistContainer1)[clickedNumber].isPlaying = true;
+        player1->setVolume(ui->volume1Slider->value());
         player1->play();
         player1_isPlaying = true;
         ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         playlistModel1->changedData(clickedNumber, clickedNumber);
+        if(stop2ndPanel)
+        {
+            stop2clicked();
+        }
     }
 }
 
@@ -675,10 +698,15 @@ void PlayerMainWindow::onPlaylistDoubleclick2(QModelIndex clickedItem)
         player2->stop();
         player2->setFileName(playlistContainer2->at(clickedNumber).filePath);
         (*playlistContainer2)[clickedNumber].isPlaying = true;
+        player2->setVolume(ui->volume2Slider->value());
         player2->play();
         player2_isPlaying = true;
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         playlistModel2->changedData(clickedNumber, clickedNumber);
+        if(stop2ndPanel)
+        {
+            stop1clicked();
+        }
     }
 }
 
@@ -707,10 +735,15 @@ void PlayerMainWindow::playSelectedTrack1()
         player1->stop();
         player1->setFileName(playlistContainer1->at(selected_track).filePath);
         (*playlistContainer1)[selected_track].isPlaying = true;
+        player1->setVolume(ui->volume1Slider->value());
         player1->play();
         player1_isPlaying = true;
         ui->play1Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         playlistModel1->changedData(selected_track, selected_track);
+        if(stop2ndPanel)
+        {
+            stop2clicked();
+        }
     }
 }
 
@@ -729,9 +762,72 @@ void PlayerMainWindow::playSelectedTrack2()
         player2->stop();
         player2->setFileName(playlistContainer2->at(selected_track).filePath);
         (*playlistContainer2)[selected_track].isPlaying = true;
+        player2->setVolume(ui->volume2Slider->value());
         player2->play();
         player2_isPlaying = true;
         ui->play2Button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         playlistModel2->changedData(selected_track, selected_track);
+        if(stop2ndPanel)
+        {
+            stop1clicked();
+        }
     }
+}
+
+void PlayerMainWindow::onActionSettings()
+{
+    Settings_Dialog dialog(stop2ndPanel, fadingStop, fadingTime, this);
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        stop2ndPanel = dialog.getStop2ndPanel();
+        fadingStop = dialog.getFadingStop();
+        fadingTime = dialog.getFadingTime();
+    }
+}
+
+void PlayerMainWindow::setFadingVolume(SoundPlayer *player, QTimer *timer)
+{
+    static int volume_x100 = 0, countTimer = 0;
+    static bool countDown = false;
+    int volume;
+    if(countDown)
+    {
+        countTimer++;
+        volume = volume_x100 * (fadingTime * 100 - countTimer) / (fadingTime * 100);
+        if(volume <= 0)
+        {
+            player->stop();
+            countDown= false;
+            timer->stop();
+            return;
+        }
+        player->setVolume(volume / 100);
+    }
+    else    //Начали затихание
+    {
+        if(fadingTime == 0)
+        {
+            player->stop();
+            countDown= false;
+            timer->stop();
+            return;
+        }
+        volume_x100 = player->getVolume() * 100;
+        countTimer = 1;
+        volume = volume_x100 * (fadingTime * 100 - countTimer) / (fadingTime * 100);
+        player->setVolume(volume);
+        countDown = true;
+    }
+
+    timer->start(10);
+}
+
+void PlayerMainWindow::onTimerTimeout1()
+{
+    setFadingVolume(player1, timer1);
+}
+
+void PlayerMainWindow::onTimerTimeout2()
+{
+    setFadingVolume(player2, timer2);
 }

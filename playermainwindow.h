@@ -13,6 +13,7 @@ class QFileSystemModel;
 class QItemSelectionModel;
 class QStringList;
 class QMediaPlaylist;
+class QTimer;
 
 #define ADD_SINGLE_STEP 2
 #define ADD_PAGE_STEP 5
@@ -34,6 +35,8 @@ private:
     bool player1_isPlaying, player2_isPlaying;
     bool goToNextTrack1, goToNextTrack2;
     bool stopButtonClicked, forwardButtonClicked, backButtonClicked;
+    bool stop2ndPanel, fadingStop;
+    int fadingTime;
     QFileSystemModel *model1;
     QFileSystemModel *model2;
     QItemSelectionModel *filesSelectionModel1, *filesSelectionModel2;
@@ -42,12 +45,14 @@ private:
     QStringList *soundExtentions;
     QMediaPlaylist *mediaPlaylist1, *mediaPlaylist2;
     PlaylistModel *playlistModel1, *playlistModel2;
+    QTimer *timer1, *timer2;
 
     void createConnections();
     int playingTrack(QList<MediaItem>*);
     int selectNextTrack(QList<MediaItem>* playlist, SoundPlayer *player);
     int selectPrevTrack(QList<MediaItem>* playlist, SoundPlayer *player);
     bool setFirstTrackInPLaylist(int player_number);
+    void setFadingVolume(SoundPlayer *player, QTimer *timer);
 
 signals:
     void setMediaPlaylist1(QMediaPlaylist*);
@@ -87,6 +92,9 @@ private slots:
     void onKeySpace2();
     void playSelectedTrack1();
     void playSelectedTrack2();
+    void onActionSettings();
+    void onTimerTimeout1();
+    void onTimerTimeout2();
 };
 
 #endif // PLAYERMAINWINDOW_H

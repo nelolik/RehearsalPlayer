@@ -105,3 +105,8 @@ void SoundPlayer::setVolume(int volume)
 {
     m_mpl->setVolume(volume);
 }
+
+int SoundPlayer::getVolume()
+{
+    return m_mpl->volume();
+}

@@ -31,7 +31,8 @@ SOURCES += \
     playlistmodel.cpp \
     customlistview.cpp \
     mediaitem.cpp \
-    basepanel.cpp
+    basepanel.cpp \
+    settings_dialog.cpp
 
 HEADERS += \
         playermainwindow.h \
@@ -39,7 +40,9 @@ HEADERS += \
     playlistmodel.h \
     customlistview.h \
     mediaitem.h \
-    basepanel.h
+    basepanel.h \
+    settings_dialog.h
 
 FORMS += \
-        playermainwindow.ui
+        playermainwindow.ui \
+    settings_dialog.ui

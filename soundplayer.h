@@ -26,6 +26,7 @@ public:
     void stop();
     void setNewPosition(int);
     bool audioAvailable();
+    int getVolume();
 
 signals:
     void playStart();
@@ -42,6 +43,8 @@ private slots:
     void changedDuration(qint64);
     void onAudioAvailableChanged(bool available);
     void onStateChaged(QMediaPlayer::State);
+
+public slots:
     void setVolume(int volume);
 
 public slots:
