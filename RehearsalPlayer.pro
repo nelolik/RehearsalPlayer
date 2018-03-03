@@ -46,3 +46,6 @@ HEADERS += \
 FORMS += \
         playermainwindow.ui \
     settings_dialog.ui
+
+RESOURCES += \
+    image.qrc

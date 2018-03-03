@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>PlayerMainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="image.qrc">
+    <normaloff>:/new/icon/RP.jpg</normaloff>:/new/icon/RP.jpg</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <property name="leftMargin">
@@ -714,6 +718,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections/>
 </ui>
